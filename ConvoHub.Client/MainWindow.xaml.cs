@@ -141,11 +141,59 @@ public partial class MainWindow : Window
                 content.Children.Add(new TextBlock { Text = message.Content, TextWrapping = TextWrapping.Wrap });
             }
         }
-        else if (message.Kind == MessageKind.Image) content.Children.Add(new Image { Source = new BitmapImage(new Uri(ServiceUrl + message.Content)), MaxWidth = 560, MaxHeight = 360, Stretch = Stretch.Uniform, Margin = new Thickness(0, 8, 0, 0) });
-        else content.Children.Add(new MediaElement { Source = new Uri(ServiceUrl + message.Content), MaxWidth = 560, MaxHeight = 360, LoadedBehavior = MediaState.Manual, UnloadedBehavior = MediaState.Stop, Margin = new Thickness(0, 8, 0, 0) });
+        else if (message.Kind == MessageKind.Image)
+        {
+            var image = new Image { Source = new BitmapImage(new Uri(ServiceUrl + message.Content)), MaxWidth = 560, MaxHeight = 360, Stretch = Stretch.Uniform, Margin = new Thickness(0, 8, 0, 0), Cursor = Cursors.Hand };
+            image.MouseLeftButtonDown += Media_MouseLeftButtonDown;
+            image.Tag = message.Content;
+            content.Children.Add(image);
+        }
+        else
+        {
+            var video = new MediaElement { Source = new Uri(ServiceUrl + message.Content), MaxWidth = 560, MaxHeight = 360, LoadedBehavior = MediaState.Manual, UnloadedBehavior = MediaState.Stop, Margin = new Thickness(0, 8, 0, 0), Cursor = Cursors.Hand };
+            video.MouseLeftButtonDown += Media_MouseLeftButtonDown;
+            video.Tag = message.Content;
+            content.Children.Add(video);
+        }
         card.Child = content;
         MessagesPanel.Children.Add(card);
         MessagesScrollViewer.ScrollToEnd();
+    }
+
+    private async void Media_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount != 2 || sender is not FrameworkElement { Tag: string mediaPath }) return;
+        e.Handled = true;
+        await DownloadMediaAsync(mediaPath);
+    }
+
+    private async Task DownloadMediaAsync(string mediaPath)
+    {
+        var mediaUri = new Uri(ServiceUrl + mediaPath);
+        var fileName = Path.GetFileName(Uri.UnescapeDataString(mediaUri.AbsolutePath));
+        var extension = Path.GetExtension(fileName);
+        var dialog = new SaveFileDialog
+        {
+            Title = "下載媒體",
+            FileName = string.IsNullOrWhiteSpace(fileName) ? "media" : fileName,
+            Filter = string.IsNullOrWhiteSpace(extension) ? "所有檔案|*.*" : $"{extension.TrimStart('.').ToUpperInvariant()} 檔案|*{extension}|所有檔案|*.*",
+            AddExtension = true,
+            OverwritePrompt = true
+        };
+        if (dialog.ShowDialog() != true) return;
+
+        try
+        {
+            using var response = await httpClient.GetAsync(mediaUri, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            await using var source = await response.Content.ReadAsStreamAsync();
+            await using var destination = File.Create(dialog.FileName);
+            await source.CopyToAsync(destination);
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(exception.Message, "下載失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private static FlowDocumentScrollViewer RenderMarkdown(string markdown)

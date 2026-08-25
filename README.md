@@ -10,6 +10,7 @@ ConvoHub 是供企業內部使用的簡易 Windows 通訊軟體，採 WPF Client
 - 輸入框最高 140px，內容過長時在輸入框內捲動；輸入 Markdown 時會即時顯示預覽。
 - 表格會依欄位與跨欄資訊繪製成 WPF Grid；遇到不完整或不支援的 Markdown 結構時，訊息會退回純文字顯示，不會使 Client 關閉。
 - 可上傳 JPG、PNG、GIF、WebP 圖片與 MP4、WebM、MOV、AVI 影片，並直接嵌入訊息串播放/預覽。
+- 對話中的圖片或影片可雙擊，選擇儲存位置下載原始媒體檔案。
 - Service 以記憶體保存最近 200 則訊息；媒體檔案存放於 Service 執行目錄的 `uploads`，單檔上限 100 MB。
 
 ## 執行方式
