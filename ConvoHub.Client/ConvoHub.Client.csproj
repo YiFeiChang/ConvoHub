@@ -8,4 +8,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.43.0" />
+    <ProjectReference Include="..\ConvoHub.Models\ConvoHub.Models.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.20" />
+  </ItemGroup>
+
 </Project>

@@ -3,10 +3,53 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ConvoHub.Client"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="ConvoHub" Height="680" Width="980" MinHeight="480" MinWidth="680"
+        Background="#F4F1EA" Loaded="Window_Loaded" Closing="Window_Closing">
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
+        <Grid Margin="0,0,0,18">
+            <StackPanel>
+                <TextBlock Text="CONVOHUB" FontSize="12" FontWeight="Bold" Foreground="#B35A38" />
+                <TextBlock Text="Team room" FontSize="30" FontWeight="SemiBold" Foreground="#202A2E" />
+            </StackPanel>
+            <Border HorizontalAlignment="Right" Background="#E2E9E1" Padding="12,7" CornerRadius="4">
+                <TextBlock x:Name="UserLabel" Foreground="#315044" FontWeight="SemiBold" />
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="1" Background="White" BorderBrush="#D9DED9" BorderThickness="1" Padding="16">
+            <ScrollViewer x:Name="MessagesScrollViewer" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="MessagesPanel" />
+            </ScrollViewer>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="0,16,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border x:Name="MarkdownPreviewBorder" Grid.ColumnSpan="4" Visibility="Collapsed" Background="#F6F8FA" BorderBrush="#D0D7DE" BorderThickness="1" Padding="12" Margin="0,0,0,10">
+                <ScrollViewer MaxHeight="180" VerticalScrollBarVisibility="Auto">
+                    <ContentControl x:Name="MarkdownPreview" />
+                </ScrollViewer>
+            </Border>
+            <TextBox x:Name="MessageInput" Grid.Row="1" Grid.Column="0" MinHeight="42" MaxHeight="140" Padding="12" AcceptsReturn="True" TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto" TextChanged="MessageInput_TextChanged" KeyDown="MessageInput_KeyDown" />
+            <Button Grid.Row="1" Grid.Column="1" Content="圖片" Margin="10,0,0,0" Padding="16,0" Click="UploadImage_Click" />
+            <Button Grid.Row="1" Grid.Column="2" Content="影片" Margin="8,0,0,0" Padding="16,0" Click="UploadVideo_Click" />
+            <Button Grid.Row="1" Grid.Column="3" Content="傳送" Margin="8,0,0,0" Padding="20,0" Background="#B35A38" Foreground="White" Click="Send_Click" />
+        </Grid>
     </Grid>
 </Window>
