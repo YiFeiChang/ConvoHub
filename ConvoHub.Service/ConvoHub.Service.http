@@ -1,0 +1,6 @@
+@ConvoHub.Service_HostAddress = http://localhost:5025
+
+GET {{ConvoHub.Service_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

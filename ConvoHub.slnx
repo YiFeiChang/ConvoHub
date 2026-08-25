@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ConvoHub.Client/ConvoHub.Client.csproj" />
+  <Project Path="ConvoHub.Models/ConvoHub.Models.csproj" />
+  <Project Path="ConvoHub.Service/ConvoHub.Service.csproj" />
+</Solution>
